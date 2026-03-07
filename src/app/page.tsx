@@ -1,181 +1,172 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { 
   Stethoscope, MessageCircle, ChevronRight, HeartPulse,
-  Microscope, Baby, Star
+  Microscope, Baby, Star, Sparkles, ShieldCheck
 } from "lucide-react"
-import Link from "next/link"
 
-export default function KlinikaMeEfekte() {
-  const WHATSAPP_NUMBER = "3556XXXXXXXX"; 
-  const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Përshëndetje! Ju kontaktoj nga faqja e klinikës.`;
+export default function KlinikaLuxury() {
+  const WHATSAPP_NUMBER = "3556XXXXXXXX"; // Vendos numrin tënd këtu
+  const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Përshëndetje! Ju kontaktoj nga faqja për një konsultë.`;
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden">
+    <main className="min-h-screen bg-[#fafbff] text-slate-900 font-sans overflow-x-hidden relative">
       
-      {/* --- NAVBAR ME EFEKT BLUR --- */}
+      {/* EFEKTET E SFONDIT */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-100/50 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] right-[-5%] w-[40%] h-[40%] bg-purple-100/50 rounded-full blur-[120px]" />
+      </div>
+
+      {/* --- NAVBAR --- */}
       <motion.nav 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed w-full z-50 bg-white/70 backdrop-blur-xl border-b px-6 py-4"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="fixed w-full z-50 px-6 py-4"
       >
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <div className="bg-blue-600 p-2 rounded-xl">
+        <div className="max-w-7xl mx-auto flex justify-between items-center bg-white/40 backdrop-blur-2xl border border-white/20 px-8 py-3 rounded-3xl shadow-2xl shadow-blue-500/5">
+          <div className="flex items-center gap-2">
+            <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-xl shadow-lg">
               <HeartPulse className="text-white w-6 h-6" />
             </div>
-            <h1 className="text-2xl font-black tracking-tighter italic">ALBANIA<span className="text-blue-600">FERTILITY</span></h1>
-          </motion.div>
+            <h1 className="text-2xl font-black tracking-tighter uppercase italic">ALBANIA<span className="text-blue-600">FERTILITY</span></h1>
+          </div>
           
           <Button 
             onClick={() => window.open(WHATSAPP_LINK, '_blank')}
-            className="bg-blue-600 hover:bg-blue-700 rounded-full px-8 font-bold shadow-lg shadow-blue-200 transition-all hover:shadow-blue-400"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl px-8 font-bold text-white border-none shadow-xl transition-all"
           >
-            REZERVO
+            KONTAKTO
           </Button>
         </div>
       </motion.nav>
 
       {/* --- HERO SECTION --- */}
-      <section className="relative pt-32 pb-20 lg:pt-56 lg:pb-32 px-6">
+      <section className="relative pt-40 pb-20 lg:pt-60 px-6 z-10">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           
           <motion.div 
-            initial={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-black tracking-wide border border-blue-100">
-              <Star className="w-4 h-4 fill-blue-600" /> TEKNOLOGJIA E FUNDIT 2026
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 px-5 py-2 rounded-full text-xs font-black tracking-[0.2em] border border-blue-100/50 shadow-sm">
+              <Sparkles className="w-4 h-4 text-purple-500" /> TEKNOLOGJIA E ARDHMES
             </div>
-            <h2 className="text-6xl lg:text-8xl font-black tracking-tighter leading-[0.85]">
-              Krijojmë <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Mrekulli.</span>
+            <h2 className="text-6xl lg:text-8xl font-black tracking-tighter leading-[0.85] text-slate-900">
+              Më shumë se <br />
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent italic">shkencë.</span>
             </h2>
-            <p className="text-xl text-slate-500 max-w-lg leading-relaxed">
-              Klinika lider në Ballkan për trajtimet IVF, me një shkallë suksesi që kalon 90%.
+            <p className="text-xl text-slate-500/80 max-w-lg leading-relaxed font-medium">
+              Eksperienca më premium mjekësore në Shqipëri. Ne kombinojmë luksin me rezultatet më të larta në fertilitet.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-5">
               <motion.button 
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.05, 
+                  boxShadow: "0 20px 40px rgba(37, 99, 235, 0.2)" 
+                }}
                 whileTap={{ scale: 0.95 }}
-                className="h-16 px-10 rounded-2xl bg-slate-900 text-white font-bold text-lg shadow-2xl shadow-slate-300 flex items-center gap-2"
+                className="h-16 px-12 rounded-[24px] bg-slate-900 text-white font-bold text-lg flex items-center gap-3"
               >
-                Fillo Rrugëtimin <ChevronRight />
+                Fillo Tani <ChevronRight className="w-5 h-5 text-blue-400" />
               </motion.button>
               
               <motion.button 
-                whileHover={{ scale: 1.05, borderColor: "#22c55e" }}
-                className="h-16 px-10 rounded-2xl border-2 border-slate-200 font-bold text-lg flex items-center gap-2 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                className="h-16 px-10 rounded-[24px] border-2 border-white bg-white/50 backdrop-blur-md shadow-xl shadow-blue-500/5 font-bold text-lg flex items-center gap-3"
                 onClick={() => window.open(WHATSAPP_LINK, '_blank')}
               >
-                <MessageCircle className="text-green-500" /> WhatsApp
+                <MessageCircle className="text-green-500 w-6 h-6" /> WhatsApp
               </motion.button>
             </div>
           </motion.div>
           
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1 }}
             className="relative"
           >
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[70px] blur-2xl opacity-20 animate-pulse" />
             <motion.div 
-              animate={{ y: [0, -20, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10 rounded-[60px] overflow-hidden border-[16px] border-white shadow-2xl"
+              animate={{ y: [0, -25, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="relative z-10 rounded-[60px] overflow-hidden border-[12px] border-white/80 shadow-2xl"
             >
               <img 
-                src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1000" 
-                alt="Clinic" 
-                className="w-full h-[600px] object-cover" 
+                src="https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=1000" 
+                alt="Clinic Luxury" 
+                className="w-full h-[650px] object-cover shadow-inner" 
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent" />
             </motion.div>
-            <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-3xl shadow-2xl z-20 border border-slate-50">
-              <div className="text-5xl font-black text-blue-600">94%</div>
-              <div className="text-sm font-bold text-slate-400">Suksesi IVF</div>
-            </div>
+
+            <motion.div 
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-xl p-8 rounded-[35px] shadow-2xl border border-white z-20 flex items-center gap-5"
+            >
+              <div className="bg-green-100 p-4 rounded-2xl">
+                <ShieldCheck className="w-8 h-8 text-green-600" />
+              </div>
+              <div>
+                <div className="text-3xl font-black text-slate-900 leading-none">100%</div>
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Konfidencialitet</div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* --- SHERBIMET --- */}
-      <section className="py-32 px-6 bg-slate-50/50">
+      <section className="py-32 px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
-          {/* Rregullimi i gabimit te rreshti 129/130 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-4">Ekselencë Mjekësore</h2>
-            <div className="h-2 w-24 bg-blue-600 mx-auto rounded-full" />
-          </motion.div>
+          <div className="text-center mb-24">
+            <h2 className="text-5xl font-black tracking-tight bg-gradient-to-b from-slate-900 to-slate-500 bg-clip-text text-transparent italic">Procedura Ekskluzive</h2>
+          </div>
 
-          <motion.div 
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
-            transition={{ staggerChildren: 0.2 }}
-            className="grid md:grid-cols-3 gap-8"
-          >
+          <div className="grid md:grid-cols-3 gap-10">
             {[
-              { title: "IVF Profesionale", icon: <Microscope className="w-8 h-8"/>, color: "bg-blue-500" },
-              { title: "Gjenetikë", icon: <Stethoscope className="w-8 h-8"/>, color: "bg-cyan-500" },
-              { title: "Kryoprezervim", icon: <Baby className="w-8 h-8"/>, color: "bg-indigo-500" },
+              { title: "Smart IVF", icon: <Microscope className="w-8 h-8" />, color: "from-blue-500 to-blue-700" },
+              { title: "Gjenetika Pro", icon: <Star className="w-8 h-8" />, color: "from-purple-500 to-purple-700" },
+              { title: "Sporte Cryo", icon: <Baby className="w-8 h-8" />, color: "from-pink-500 to-pink-700" },
             ].map((s, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -15 }}
-                className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 hover:shadow-2xl transition-all"
+                whileHover={{ y: -20, scale: 1.02 }}
+                className="bg-white/60 backdrop-blur-sm border border-white p-12 rounded-[50px] shadow-xl hover:shadow-2xl transition-all duration-500 group"
               >
-                <div className={`${s.color} w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg`}>
+                <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-10 shadow-xl group-hover:rotate-12 transition-transform`}>
                   {s.icon}
                 </div>
-                <h4 className="text-2xl font-black mb-4">{s.title}</h4>
-                <p className="text-slate-500 leading-relaxed mb-6">Zgjidhje të personalizuara duke përdorur teknologjinë më të avancuar në botë.</p>
-                <Link href="#" className="font-bold text-blue-600 flex items-center gap-2 group">
-                  Mëso më shumë <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                </Link>
+                <h4 className="text-2xl font-black mb-5 text-slate-800">{s.title}</h4>
+                <p className="text-slate-500 leading-relaxed font-medium italic">Standardet më të larta mjekësore në një ambient të kuruar deri në detaje.</p>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* --- FLOATING WHATSAPP --- */}
-      <motion.div 
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1, type: "spring" }}
-        className="fixed bottom-8 right-8 z-[100]"
-      >
+      <div className="fixed bottom-10 right-10 z-[100]">
         <motion.button 
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => window.open(WHATSAPP_LINK, '_blank')}
-          className="relative bg-green-500 text-white p-5 rounded-full shadow-2xl group"
+          className="relative bg-gradient-to-br from-green-400 to-green-600 text-white p-6 rounded-[30px] shadow-[0_20px_40px_rgba(34,197,94,0.4)] overflow-hidden group"
         >
-          <motion.span 
-            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="absolute inset-0 bg-green-500 rounded-full"
-          />
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           <MessageCircle className="w-8 h-8 relative z-10" />
         </motion.button>
-      </motion.div>
+      </div>
 
     </main>
   );

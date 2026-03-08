@@ -18,7 +18,36 @@ import Link from "next/link";
 import ShinyButton from "@/components/magicui/shiny-button";
 import InteractiveGridPattern from "@/components/magicui/interactive-grid";
 
-// --- ANIMACIONET ---
+// --- ANIMACIONET E REJA (MË SMOOTH) ---
+
+const titleContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const titleItem: Variants = {
+  hidden: { 
+    opacity: 0, 
+    y: 40, 
+    filter: "blur(15px)" 
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    filter: "blur(0px)",
+    transition: { 
+      duration: 1.2, 
+      ease: [0.22, 1, 0.36, 1] // Custom Cubic Bezier për lëvizje super smooth
+    } 
+  },
+};
+
 const cardHover: Variants = {
   initial: { y: 0 },
   animate: { y: -10, transition: { duration: 0.3, ease: "easeOut" } }
@@ -29,7 +58,6 @@ const iconAnimation: Variants = {
   animate: { scale: 1.1, rotate: [0, -5, 5, 0], transition: { duration: 0.5 } }
 };
 
-// Animacioni i Dropdown-it (jo full screen)
 const dropdownVariants: Variants = {
   closed: { opacity: 0, y: -20, transition: { duration: 0.2 } },
   open: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
@@ -39,7 +67,6 @@ export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // --- REFRESH NE TOP ---
   useEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
@@ -47,7 +74,6 @@ export default function Page() {
     window.scrollTo(0, 0);
   }, []);
 
-  // --- SCROLL LOGIC ---
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
@@ -77,7 +103,6 @@ export default function Page() {
               </div>
             </Link>
 
-            {/* Desktop Links */}
             <div className="hidden lg:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.2em] text-white/50">
               <Link href="/sherbimet" className="hover:text-[#c5a059] transition-all">Shërbimet</Link>
               <Link href="/kontakt" className="hover:text-[#c5a059] transition-all">Kontakt</Link>
@@ -87,15 +112,12 @@ export default function Page() {
               <Link href="/kontakt" className="hidden md:block">
                 <button className="bg-[#c5a059] text-black px-6 py-3 rounded-xl font-bold text-[11px] uppercase tracking-wider hover:bg-white transition-all shadow-lg">Konsultë</button>
               </Link>
-              
-              {/* MOBILE BUTTON */}
               <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 text-[#c5a059]">
                 {isOpen ? <X size={32} /> : <Menu size={32} />}
               </button>
             </div>
           </div>
 
-          {/* --- MOBILE DROPDOWN (POSHTE NAVBAR-IT) --- */}
           <AnimatePresence>
             {isOpen && (
               <motion.div 
@@ -132,15 +154,30 @@ export default function Page() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#030303]/80 to-[#030303]" />
           <InteractiveGridPattern className="opacity-10" />
         </div>
+        
         <div className="relative z-10 px-6 max-w-6xl mx-auto w-full text-left">
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-6xl md:text-[110px] font-black tracking-tighter leading-[0.85] uppercase mb-10 italic">
-            Drejtësi që <br /> <span className="text-[#c5a059]">ju takon.</span>
-          </motion.h1>
-          <div className="flex flex-col sm:flex-row gap-6">
-            <Link href="/kontakt">
-              <ShinyButton className="px-12 py-6 bg-[#c5a059] text-black text-lg font-black rounded-2xl shadow-[0_20px_50px_rgba(197,160,89,0.3)]">Rezervo Konsultë</ShinyButton>
-            </Link>
-          </div>
+          {/* ANIMACIONI I RI SMOOTH KETU */}
+          <motion.div
+            variants={titleContainer}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col"
+          >
+            <motion.h1 variants={titleItem} className="text-6xl md:text-[110px] font-black tracking-tighter leading-[0.85] uppercase italic text-white">
+              Drejtësi që
+            </motion.h1>
+            <motion.h1 variants={titleItem} className="text-6xl md:text-[110px] font-black tracking-tighter leading-[0.85] uppercase italic text-[#c5a059] mb-10">
+              ju takon.
+            </motion.h1>
+            
+            <motion.div variants={titleItem}>
+              <Link href="/kontakt">
+                <ShinyButton className="px-12 py-6 bg-[#c5a059] text-black text-lg font-black rounded-2xl shadow-[0_20px_50px_rgba(197,160,89,0.3)]">
+                  Rezervo Konsultë
+                </ShinyButton>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

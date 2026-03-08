@@ -2,10 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, Variants, AnimatePresence } from "framer-motion";
-import { Scale, ShieldCheck, Gavel, FileText, Menu, X, ChevronRight } from "lucide-react";
+import { 
+  Scale, 
+  ShieldCheck, 
+  Gavel, 
+  Menu, 
+  X, 
+  ChevronRight, 
+  ArrowRight 
+} from "lucide-react";
 import ShinyButton from "@/components/magicui/shiny-button";
 import InteractiveGridPattern from "@/components/magicui/interactive-grid";
-import Link from "next/link";
+import Link from "link";
 
 // --- ANIMACIONET ---
 const gavelVariants: Variants = {
@@ -24,11 +32,16 @@ const scaleVariants: Variants = {
   }
 };
 
+const menuVariants = {
+  closed: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+  open: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+};
+
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Monitoron levizjen e mouse (scroll)
+  // Monitoron levizjen e scroll-it
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -37,7 +50,6 @@ export default function Page() {
         setIsScrolled(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -48,12 +60,12 @@ export default function Page() {
       {/* --- NAVBAR DINAMIK --- */}
       <nav 
         className={`fixed top-0 left-0 w-full z-[100] px-4 md:px-8 transition-all duration-700 ease-in-out ${
-          isScrolled 
+          isScrolled && !isOpen
             ? "opacity-0 -translate-y-full pointer-events-none" 
             : "opacity-100 translate-y-0"
         }`}
       >
-        <div className="max-w-6xl mx-auto py-6">
+        <div className="max-w-6xl mx-auto py-6 relative">
           <div className="flex items-center justify-between px-6 md:px-8 py-5 rounded-[24px] bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 shadow-2xl relative z-[110]">
             
             <Link href="/" className="flex items-center gap-3 cursor-pointer group">
@@ -68,9 +80,10 @@ export default function Page() {
               </div>
             </Link>
 
+            {/* Desktop Menu */}
             <div className="hidden lg:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.2em] text-white/50">
-              <Link href="/sherbimet" className="hover:text-[#c5a059] transition-all">Shërbimet</Link>
-              <Link href="/kontakt" className="hover:text-[#c5a059] transition-all">Kontakt</Link>
+              <Link href="/sherbimet" className="hover:text-[#c5a059] transition-all underline-offset-8 hover:underline">Shërbimet</Link>
+              <Link href="/kontakt" className="hover:text-[#c5a059] transition-all underline-offset-8 hover:underline">Kontakt</Link>
             </div>
 
             <div className="flex items-center gap-4">
@@ -79,20 +92,61 @@ export default function Page() {
                   Konsultë
                 </button>
               </Link>
-              <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 text-[#c5a059]">
-                {isOpen ? <X size={32} /> : <Menu size={32} />}
+              {/* Butoni Mobile */}
+              <button 
+                onClick={() => setIsOpen(!isOpen)} 
+                className="lg:hidden p-2 text-[#c5a059] hover:bg-white/5 rounded-xl transition-all"
+              >
+                {isOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
           </div>
+
+          {/* --- MOBILE MENU DROPDOWN --- */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                variants={menuVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
+                className="absolute top-[120%] left-0 right-0 bg-[#0a0a0a]/95 border border-white/10 rounded-[32px] p-8 shadow-2xl lg:hidden z-[100] backdrop-blur-xl mx-2"
+              >
+                <div className="flex flex-col gap-6 text-center">
+                  <Link 
+                    href="/sherbimet" 
+                    onClick={() => setIsOpen(false)}
+                    className="text-3xl font-black uppercase tracking-tighter hover:text-[#c5a059] transition-colors flex items-center justify-center gap-3"
+                  >
+                    Shërbimet <ArrowRight size={20} className="text-[#c5a059]" />
+                  </Link>
+                  <Link 
+                    href="/kontakt" 
+                    onClick={() => setIsOpen(false)}
+                    className="text-3xl font-black uppercase tracking-tighter hover:text-[#c5a059] transition-colors flex items-center justify-center gap-3"
+                  >
+                    Kontakt <ArrowRight size={20} className="text-[#c5a059]" />
+                  </Link>
+                  <div className="h-[1px] bg-white/10 w-full my-2" />
+                  <Link href="/kontakt" onClick={() => setIsOpen(false)}>
+                    <button className="w-full bg-[#c5a059] text-black py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-xl">
+                      Rezervo Konsultë
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </nav>
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-20 overflow-hidden text-left">
+      <section className="relative min-h-[95vh] flex items-center justify-center pt-20 overflow-hidden text-left">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=2070&auto=format&fit=crop" 
-            className="w-full h-full object-cover opacity-20 grayscale" 
+            className="w-full h-full object-cover opacity-20 grayscale scale-110" 
+            alt="Law Office Background"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#030303]/80 to-[#030303]" />
           <InteractiveGridPattern className="opacity-10" />
@@ -103,14 +157,14 @@ export default function Page() {
             <h1 className="text-6xl md:text-[120px] font-black tracking-tighter leading-[0.85] uppercase mb-10 italic">
               Drejtësi që <br /> <span className="text-[#c5a059]">ju takon.</span>
             </h1>
-            <div className="flex flex-col sm:flex-row gap-6 justify-start">
+            <div className="flex flex-col sm:row gap-6 justify-start">
               <Link href="/kontakt">
                 <ShinyButton className="px-12 py-6 bg-[#c5a059] text-black text-lg font-black rounded-2xl shadow-[0_20px_50px_rgba(197,160,89,0.3)]">
                   Rezervo Konsultë
                 </ShinyButton>
               </Link>
               <Link href="/sherbimet">
-                <button className="px-12 py-6 border border-white/10 rounded-2xl text-xs font-bold uppercase tracking-[0.3em] hover:bg-white/5 backdrop-blur-md transition-all">
+                <button className="px-12 py-6 border border-white/10 rounded-2xl text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-white/5 backdrop-blur-md transition-all">
                   Eksploro Shërbimet
                 </button>
               </Link>
@@ -120,38 +174,40 @@ export default function Page() {
       </section>
 
       {/* --- SERVICES SECTION --- */}
-      <section className="py-24 px-6 relative">
+      <section className="py-24 px-6 relative bg-[#030303]">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <motion.div whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#c5a059]/30 transition-all text-left">
-              <motion.div variants={scaleVariants} className="mb-8 w-fit">
-                <Scale className="w-12 h-12 text-[#c5a059]" />
+            <motion.div whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[48px] hover:border-[#c5a059]/30 transition-all text-left group">
+              <motion.div variants={scaleVariants} className="mb-8 w-fit p-4 rounded-2xl bg-[#c5a059]/5 border border-[#c5a059]/10">
+                <Scale className="w-10 h-10 text-[#c5a059]" />
               </motion.div>
-              <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter">E Drejta Tregtare</h3>
-              <p className="text-white/40 leading-relaxed mb-6">Konsulencë strategjike për biznesin tuaj dhe mbrojtje të interesave tregtare.</p>
-              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em]">
+              <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">E Drejta Tregtare</h3>
+              <p className="text-white/40 leading-relaxed mb-8">Konsulencë strategjike për biznesin tuaj dhe mbrojtje të interesave tregtare.</p>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all">
                 Më shumë <ChevronRight size={14} />
               </Link>
             </motion.div>
 
-            <motion.div whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#c5a059]/30 transition-all relative overflow-hidden text-left">
-              <div className="absolute top-0 right-0 p-8 opacity-5"><Gavel size={120} /></div>
-              <motion.div variants={gavelVariants} className="mb-8 w-fit">
-                <Gavel className="w-12 h-12 text-[#c5a059]" />
+            <motion.div whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[48px] hover:border-[#c5a059]/30 transition-all relative overflow-hidden text-left group">
+              <div className="absolute top-[-20px] right-[-20px] p-8 opacity-[0.03] rotate-12 scale-150"><Gavel size={200} /></div>
+              <motion.div variants={gavelVariants} className="mb-8 w-fit p-4 rounded-2xl bg-[#c5a059]/5 border border-[#c5a059]/10">
+                <Gavel className="w-10 h-10 text-[#c5a059]" />
               </motion.div>
-              <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter">Mbrojtje Penale</h3>
-              <p className="text-white/40 leading-relaxed mb-6">Përfaqësim ligjor i specializuar në çështjet penale me profesionalizëm maksimal.</p>
-              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em]">
+              <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">Mbrojtje Penale</h3>
+              <p className="text-white/40 leading-relaxed mb-8">Përfaqësim ligjor i specializuar në çështjet penale me profesionalizëm maksimal.</p>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all">
                 Më shumë <ChevronRight size={14} />
               </Link>
             </motion.div>
 
-            <motion.div whileHover={{ y: -10 }} className="bg-[#c5a059] p-10 rounded-[40px] text-black transition-all text-left">
-              <div className="mb-8"><ShieldCheck className="w-12 h-12 text-black" /></div>
-              <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter">Siguri Ligjore</h3>
-              <p className="text-black/70 leading-relaxed mb-6 font-medium">Ne sigurohemi që çdo veprim i juaj të jetë në përputhje të plotë me ligjin.</p>
-              <Link href="/kontakt" className="flex items-center gap-2 text-black text-[10px] font-black uppercase tracking-[0.2em]">
+            <motion.div whileHover={{ y: -10 }} className="bg-[#c5a059] p-10 rounded-[48px] text-black transition-all text-left shadow-[0_30px_60px_rgba(197,160,89,0.2)]">
+              <div className="mb-8 p-4 rounded-2xl bg-black/10 w-fit">
+                <ShieldCheck className="w-10 h-10 text-black" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic text-black">Siguri Ligjore</h3>
+              <p className="text-black/70 leading-relaxed mb-8 font-medium">Ne sigurohemi që çdo veprim i juaj të jetë në përputhje të plotë me ligjin.</p>
+              <Link href="/kontakt" className="flex items-center gap-2 text-black text-[10px] font-black uppercase tracking-[0.2em] font-black">
                 Na Kontaktoni <ChevronRight size={14} />
               </Link>
             </motion.div>
@@ -160,8 +216,8 @@ export default function Page() {
         </div>
       </section>
 
-      <footer className="py-20 border-t border-white/5 text-center">
-        <div className="opacity-20 text-[10px] uppercase tracking-[0.5em]">
+      <footer className="py-20 border-t border-white/5 text-center bg-[#030303]">
+        <div className="opacity-20 text-[10px] uppercase tracking-[0.5em] font-bold">
           Lex Associates • 2026 • Studio Juridike Elitare
         </div>
       </footer>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { Scale, ShieldCheck, Gavel, FileText, Menu, X, ChevronRight } from "lucide-react";
 import ShinyButton from "@/components/magicui/shiny-button";
@@ -26,12 +26,33 @@ const scaleVariants: Variants = {
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Monitoron levizjen e mouse (scroll)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#030303] text-white antialiased selection:bg-[#c5a059] selection:text-black scroll-smooth overflow-x-hidden">
       
-      {/* --- NAVBAR --- */}
-      <nav className="fixed top-0 left-0 w-full z-[100] px-4 md:px-8">
+      {/* --- NAVBAR DINAMIK --- */}
+      <nav 
+        className={`fixed top-0 left-0 w-full z-[100] px-4 md:px-8 transition-all duration-700 ease-in-out ${
+          isScrolled 
+            ? "opacity-0 -translate-y-full pointer-events-none" 
+            : "opacity-100 translate-y-0"
+        }`}
+      >
         <div className="max-w-6xl mx-auto py-6">
           <div className="flex items-center justify-between px-6 md:px-8 py-5 rounded-[24px] bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 shadow-2xl relative z-[110]">
             
@@ -67,7 +88,7 @@ export default function Page() {
       </nav>
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-20 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center justify-center pt-20 overflow-hidden text-left">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=2070&auto=format&fit=crop" 
@@ -77,12 +98,12 @@ export default function Page() {
           <InteractiveGridPattern className="opacity-10" />
         </div>
 
-        <div className="relative z-10 px-6 max-w-6xl mx-auto w-full text-left">
+        <div className="relative z-10 px-6 max-w-6xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
             <h1 className="text-6xl md:text-[120px] font-black tracking-tighter leading-[0.85] uppercase mb-10 italic">
               Drejtësi që <br /> <span className="text-[#c5a059]">ju takon.</span>
             </h1>
-            <div className="flex flex-col sm:flex-row gap-6">
+            <div className="flex flex-col sm:flex-row gap-6 justify-start">
               <Link href="/kontakt">
                 <ShinyButton className="px-12 py-6 bg-[#c5a059] text-black text-lg font-black rounded-2xl shadow-[0_20px_50px_rgba(197,160,89,0.3)]">
                   Rezervo Konsultë
@@ -98,16 +119,12 @@ export default function Page() {
         </div>
       </section>
 
-      {/* --- SEKSIONI QË MUNGONTE (3 SHËRBIMET) --- */}
+      {/* --- SERVICES SECTION --- */}
       <section className="py-24 px-6 relative">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* Karta 1 - Peshorja */}
-            <motion.div 
-              whileHover="animate"
-              className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#c5a059]/30 transition-all group"
-            >
+            <motion.div whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#c5a059]/30 transition-all text-left">
               <motion.div variants={scaleVariants} className="mb-8 w-fit">
                 <Scale className="w-12 h-12 text-[#c5a059]" />
               </motion.div>
@@ -118,14 +135,8 @@ export default function Page() {
               </Link>
             </motion.div>
 
-            {/* Karta 2 - Çekizi */}
-            <motion.div 
-              whileHover="animate"
-              className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#c5a059]/30 transition-all group relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-8 opacity-5">
-                <Gavel size={120} />
-              </div>
+            <motion.div whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#c5a059]/30 transition-all relative overflow-hidden text-left">
+              <div className="absolute top-0 right-0 p-8 opacity-5"><Gavel size={120} /></div>
               <motion.div variants={gavelVariants} className="mb-8 w-fit">
                 <Gavel className="w-12 h-12 text-[#c5a059]" />
               </motion.div>
@@ -136,14 +147,8 @@ export default function Page() {
               </Link>
             </motion.div>
 
-            {/* Karta 3 - Mbrojtja */}
-            <motion.div 
-              whileHover={{ y: -10 }}
-              className="bg-[#c5a059] p-10 rounded-[40px] text-black group transition-all"
-            >
-              <div className="mb-8">
-                <ShieldCheck className="w-12 h-12 text-black" />
-              </div>
+            <motion.div whileHover={{ y: -10 }} className="bg-[#c5a059] p-10 rounded-[40px] text-black transition-all text-left">
+              <div className="mb-8"><ShieldCheck className="w-12 h-12 text-black" /></div>
               <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter">Siguri Ligjore</h3>
               <p className="text-black/70 leading-relaxed mb-6 font-medium">Ne sigurohemi që çdo veprim i juaj të jetë në përputhje të plotë me ligjin.</p>
               <Link href="/kontakt" className="flex items-center gap-2 text-black text-[10px] font-black uppercase tracking-[0.2em]">
@@ -155,13 +160,11 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Footer i thjeshtë */}
       <footer className="py-20 border-t border-white/5 text-center">
         <div className="opacity-20 text-[10px] uppercase tracking-[0.5em]">
           Lex Associates • 2026 • Studio Juridike Elitare
         </div>
       </footer>
-
     </main>
   );
 }

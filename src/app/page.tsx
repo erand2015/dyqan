@@ -1,276 +1,252 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, Variants, AnimatePresence } from "framer-motion";
+import { 
+  Scale, 
+  ShieldCheck, 
+  Gavel, 
+  Menu, 
+  X, 
+  ChevronRight, 
+  ChevronUp,
+  Users,
+  Briefcase,
+  Globe
+} from "lucide-react";
+import Link from "next/link";
+import ShinyButton from "@/components/magicui/shiny-button";
+import InteractiveGridPattern from "@/components/magicui/interactive-grid";
 
-export default function FertilityClinic() {
+// --- ANIMACIONET E REFINUARA ---
+const titleContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.3 }
+  }
+};
+
+const titleItem: Variants = {
+  hidden: { opacity: 0, y: 40, filter: "blur(15px)" },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    filter: "blur(0px)",
+    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } 
+  }
+};
+
+const revealVariant: Variants = {
+  hidden: { opacity: 0, y: 50, filter: "blur(10px)" },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    filter: "blur(0px)",
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+  }
+};
+
+const cardHover: Variants = {
+  initial: { y: 0 },
+  animate: { y: -10, transition: { duration: 0.3, ease: "easeOut" } }
+};
+
+const iconAnimation: Variants = {
+  initial: { scale: 1 },
+  animate: { scale: 1.1, rotate: [0, -5, 5, 0], transition: { duration: 0.5 } }
+};
+
+const dropdownVariants: Variants = {
+  closed: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+  open: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
+};
+
+export default function Page() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-[#FFF8F6] text-gray-800">
+    <main className="min-h-screen bg-[#030303] text-white antialiased selection:bg-[#c5a059] selection:text-black scroll-smooth overflow-x-hidden text-left">
+      
+      {/* --- NAVBAR --- */}
+      <nav className={`fixed top-0 left-0 w-full z-[100] px-4 md:px-8 transition-all duration-700 ${isScrolled && !isOpen ? "opacity-0 -translate-y-full pointer-events-none" : "opacity-100 translate-y-0"}`}>
+        <div className="max-w-6xl mx-auto py-6 relative">
+          <div className="flex items-center justify-between px-6 md:px-8 py-5 rounded-[24px] bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 shadow-2xl relative z-[110]">
+            <Link href="/" className="flex items-center gap-3 cursor-pointer group">
+              <div className="p-2.5 rounded-xl bg-[#c5a059]/10 border border-[#c5a059]/20 group-hover:bg-[#c5a059] transition-all">
+                <Scale className="w-6 h-6 text-[#c5a059] group-hover:text-black" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-xl font-black tracking-tighter leading-none uppercase italic text-white">Lex <span className="text-[#c5a059]">Associates</span></span>
+                <span className="text-[9px] tracking-[0.3em] uppercase opacity-40 font-bold mt-1 italic">Studio Elitare</span>
+              </div>
+            </Link>
 
-      {/* NAVBAR */}
+            <div className="hidden lg:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.2em] text-white/50">
+              <Link href="/sherbimet" className="hover:text-[#c5a059] transition-all">Shërbimet</Link>
+              <Link href="/kontakt" className="hover:text-[#c5a059] transition-all">Kontakt</Link>
+            </div>
 
-      <nav className="fixed w-full z-50 flex justify-between items-center p-6 bg-white/70 backdrop-blur-xl border-b border-rose-100">
+            <div className="flex items-center gap-4">
+              <Link href="/kontakt" className="hidden md:block">
+                <button className="bg-[#c5a059] text-black px-6 py-3 rounded-xl font-bold text-[11px] uppercase tracking-wider hover:bg-white transition-all shadow-lg">Konsultë</button>
+              </Link>
+              <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 text-[#c5a059]">
+                {isOpen ? <X size={32} /> : <Menu size={32} />}
+              </button>
+            </div>
+          </div>
 
-        <div className="text-2xl font-black text-rose-500">
-          LUMINA <span className="text-purple-400 italic font-light">Fertility</span>
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div variants={dropdownVariants} initial="closed" animate="open" exit="closed" className="absolute top-full left-0 w-full mt-4 px-2 lg:hidden z-[105]">
+                <div className="bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/10 rounded-[32px] p-8 shadow-3xl flex flex-col gap-6 text-left">
+                  <Link href="/sherbimet" onClick={() => setIsOpen(false)} className="text-2xl font-black uppercase italic tracking-tighter flex items-center justify-between group">
+                    Shërbimet <ChevronRight size={20} className="text-[#c5a059]" />
+                  </Link>
+                  <Link href="/kontakt" onClick={() => setIsOpen(false)} className="text-2xl font-black uppercase italic tracking-tighter flex items-center justify-between group">
+                    Kontakt <ChevronRight size={20} className="text-[#c5a059]" />
+                  </Link>
+                  <div className="h-[1px] bg-white/5 w-full my-2" />
+                  <Link href="/kontakt" onClick={() => setIsOpen(false)}>
+                    <button className="w-full bg-[#c5a059] text-black py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">Rezervo Konsultë</button>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-
-        <div className="hidden md:flex space-x-10 text-xs uppercase tracking-[0.3em] text-gray-500">
-          <a href="#services">Shërbimet</a>
-          <a href="#doctors">Doktorët</a>
-          <a href="#about">Rreth</a>
-        </div>
-
-        <button className="bg-gradient-to-r from-rose-400 to-purple-400 text-white px-6 py-3 rounded-full text-xs font-bold shadow-lg">
-          Rezervo
-        </button>
-
       </nav>
 
-      {/* HERO */}
-
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-100 via-purple-100 to-amber-100"></div>
-
-        <div
-          className="absolute inset-0 opacity-20 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1580281657527-47dcb1c5c4c6?q=80&w=2000')",
-          }}
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center z-10 max-w-4xl px-6"
-        >
-
-          <h1 className="text-6xl md:text-8xl font-black leading-[0.9]">
-            Jeta fillon
-            <br />
-            <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-amber-400 bg-clip-text text-transparent italic">
-              këtu
-            </span>
-          </h1>
-
-          <p className="mt-8 text-lg text-gray-600 max-w-xl mx-auto">
-            Klinika jonë e fertilitetit kombinon teknologjinë moderne me
-            kujdes të personalizuar për të realizuar ëndrrën tuaj për familje.
-          </p>
-
-          <button className="mt-10 px-10 py-5 bg-gradient-to-r from-rose-400 to-purple-400 text-white rounded-2xl font-bold shadow-lg">
-            Rezervo Konsultë
-          </button>
-
-        </motion.div>
-
-      </section>
-
-      {/* SUCCESS STATS */}
-
-      <section className="py-20 bg-white">
-
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
-
-          <div>
-            <h3 className="text-5xl font-black text-rose-500">98%</h3>
-            <p className="mt-2 text-gray-500">IVF Success Rate</p>
-          </div>
-
-          <div>
-            <h3 className="text-5xl font-black text-purple-500">12,000+</h3>
-            <p className="mt-2 text-gray-500">Families Created</p>
-          </div>
-
-          <div>
-            <h3 className="text-5xl font-black text-amber-500">25+</h3>
-            <p className="mt-2 text-gray-500">Years Experience</p>
-          </div>
-
+      {/* --- HERO --- */}
+      <section className="relative min-h-[85vh] flex items-center justify-center pt-24 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=2070" className="w-full h-full object-cover opacity-20 grayscale" alt="Background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#030303]/80 to-[#030303]" />
+          <InteractiveGridPattern className="opacity-10" />
         </div>
-
+        
+        <div className="relative z-10 px-6 max-w-6xl mx-auto w-full text-left">
+          <motion.div variants={titleContainer} initial="hidden" animate="visible" className="flex flex-col">
+            <motion.h1 variants={titleItem} className="text-6xl md:text-[110px] font-black tracking-tighter leading-[0.85] uppercase italic text-white">Drejtësi që</motion.h1>
+            <motion.h1 variants={titleItem} className="text-6xl md:text-[110px] font-black tracking-tighter leading-[0.85] uppercase italic text-[#c5a059] mb-10">ju takon.</motion.h1>
+            <motion.div variants={titleItem}>
+              <Link href="/kontakt"><ShinyButton className="px-12 py-6 bg-[#c5a059] text-black text-lg font-black rounded-2xl shadow-[0_20px_50px_rgba(197,160,89,0.3)]">Rezervo Konsultë</ShinyButton></Link>
+            </motion.div>
+          </motion.div>
+        </div>
       </section>
 
-      {/* SERVICES */}
+      {/* --- SERVICES GRID --- */}
+      <section className="py-24 px-6 relative bg-[#030303]">
+        <div className="max-w-6xl mx-auto">
+          
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={revealVariant} className="mb-16 text-left">
+            <h2 className="text-[10px] uppercase tracking-[0.5em] text-[#c5a059] font-bold mb-4">Ekspertiza Jonë</h2>
+            <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic">Shërbimet Juridike</h3>
+          </motion.div>
 
-      <section id="services" className="py-32 px-6 bg-gradient-to-b from-white to-rose-50">
-
-        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
-
-          {[
-            {
-              title: "IVF Treatment",
-              img: "https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=2000",
-              desc: "Trajtimi më i avancuar për fertilitet.",
-            },
-            {
-              title: "Egg Freezing",
-              img: "https://images.unsplash.com/photo-1600959907703-125ba1374a12?q=80&w=2000",
-              desc: "Ruani fertilitetin për të ardhmen.",
-            },
-            {
-              title: "Genetic Testing",
-              img: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=80&w=2000",
-              desc: "Analiza gjenetike për embrione të shëndetshme.",
-            },
-          ].map((service, i) => (
-            <div key={i} className="group relative rounded-[30px] overflow-hidden shadow-xl">
-
-              <img
-                src={service.img}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-700"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-              <div className="relative p-10 text-white h-[420px] flex flex-col justify-end">
-
-                <h3 className="text-2xl font-bold mb-3">
-                  {service.title}
-                </h3>
-
-                <p className="text-sm opacity-90">
-                  {service.desc}
-                </p>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* 1. Tregtare */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={revealVariant} whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[48px] hover:border-[#c5a059]/30 transition-all group relative overflow-hidden flex flex-col justify-between min-h-[380px]">
+              <div>
+                <motion.div variants={iconAnimation} className="mb-8 w-fit p-4 rounded-2xl bg-[#c5a059]/5 border border-[#c5a059]/10"><Scale className="w-10 h-10 text-[#c5a059]" /></motion.div>
+                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">E Drejta Tregtare</h3>
+                <p className="text-white/40 leading-relaxed">Konsulencë strategjike për biznesin tuaj dhe mbrojtje të interesave tregtare.</p>
               </div>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all mt-8">Më shumë <ChevronRight size={14} /></Link>
+            </motion.div>
 
-            </div>
-          ))}
+            {/* 2. Penale */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={revealVariant} whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[48px] hover:border-[#c5a059]/30 transition-all relative overflow-hidden group flex flex-col justify-between min-h-[380px]">
+              <div className="absolute top-[-20px] right-[-20px] p-8 opacity-[0.03] rotate-12 scale-150"><Gavel size={200} /></div>
+              <div>
+                <motion.div variants={iconAnimation} className="mb-8 w-fit p-4 rounded-2xl bg-[#c5a059]/5 border border-[#c5a059]/10"><Gavel className="w-10 h-10 text-[#c5a059]" /></motion.div>
+                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">Mbrojtje Penale</h3>
+                <p className="text-white/40 leading-relaxed">Përfaqësim ligjor i specializuar në çështjet penale me profesionalizëm maksimal.</p>
+              </div>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all mt-8">Më shumë <ChevronRight size={14} /></Link>
+            </motion.div>
 
-        </div>
+            {/* 3. Siguri Ligjore (GOLD) */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={revealVariant} whileHover={{ y: -10 }} className="bg-[#c5a059] p-10 rounded-[48px] text-black transition-all shadow-2xl flex flex-col justify-between min-h-[380px]">
+              <div>
+                <div className="mb-8 p-4 rounded-2xl bg-black/10 w-fit"><ShieldCheck className="w-10 h-10 text-black" /></div>
+                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">Siguri Ligjore</h3>
+                <p className="text-black/70 leading-relaxed font-medium italic">Ne sigurohemi që çdo veprim i juaj të jetë në përputhje të plotë me ligjin.</p>
+              </div>
+              <Link href="/kontakt" className="flex items-center gap-2 text-black text-[10px] font-black uppercase tracking-[0.2em] mt-8">Na Kontaktoni <ChevronRight size={14} /></Link>
+            </motion.div>
 
-      </section>
+            {/* 4. Familjare (GOLD) */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={revealVariant} whileHover={{ y: -10 }} className="bg-[#c5a059] p-10 rounded-[48px] text-black transition-all shadow-2xl flex flex-col justify-between min-h-[380px]">
+              <div>
+                <div className="mb-8 p-4 rounded-2xl bg-black/10 w-fit"><Users className="w-10 h-10 text-black" /></div>
+                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">E Drejta Familjare</h3>
+                <p className="text-black/70 leading-relaxed font-medium italic">Zgjidhje ligjore për çështje të divorcit, trashëgimisë dhe kujdestarisë.</p>
+              </div>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-black text-[10px] font-black uppercase tracking-[0.2em] mt-8">Më shumë <ChevronRight size={14} /></Link>
+            </motion.div>
 
-      {/* DOCTORS */}
+            {/* 5. Punës */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={revealVariant} whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[48px] hover:border-[#c5a059]/30 transition-all group flex flex-col justify-between min-h-[380px]">
+              <div>
+                <motion.div variants={iconAnimation} className="mb-8 w-fit p-4 rounded-2xl bg-[#c5a059]/5 border border-[#c5a059]/10"><Briefcase className="w-10 h-10 text-[#c5a059]" /></motion.div>
+                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">Marrëdhëniet e Punës</h3>
+                <p className="text-white/40 leading-relaxed">Mbrojtje për punëdhënësit dhe punëmarrësit në mosmarrëveshjet kontraktuale.</p>
+              </div>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all mt-8">Më shumë <ChevronRight size={14} /></Link>
+            </motion.div>
 
-      <section id="doctors" className="py-32 bg-white">
-
-        <div className="max-w-6xl mx-auto text-center mb-20">
-          <h2 className="text-5xl font-black">Ekspertët Tanë</h2>
-        </div>
-
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 px-6">
-
-          {[
-            {
-              name: "Dr. Maria Rossi",
-              role: "IVF Specialist",
-              img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2",
-            },
-            {
-              name: "Dr. John Smith",
-              role: "Embryologist",
-              img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d",
-            },
-            {
-              name: "Dr. Elena Petrova",
-              role: "Fertility Consultant",
-              img: "https://images.unsplash.com/photo-1594824476967-48c8b964273f",
-            },
-          ].map((doc, i) => (
-
-            <div key={i} className="text-center">
-
-              <img
-                src={doc.img}
-                className="w-60 h-60 object-cover rounded-full mx-auto shadow-lg"
-              />
-
-              <h3 className="mt-6 text-xl font-bold">
-                {doc.name}
-              </h3>
-
-              <p className="text-gray-500">
-                {doc.role}
-              </p>
-
-            </div>
-
-          ))}
-
-        </div>
-
-      </section>
-
-      {/* TESTIMONIALS */}
-
-      <section className="py-32 bg-gradient-to-br from-rose-50 to-purple-50">
-
-        <div className="max-w-4xl mx-auto text-center px-6">
-
-          <h2 className="text-5xl font-black mb-10">
-            Historitë e Pacientëve
-          </h2>
-
-          <p className="text-lg text-gray-600 italic">
-            “Pas 3 vitesh përpjekje, falë Lumina Fertility u bëmë prindër.
-            Faleminderit për kujdesin dhe profesionalizmin.”
-          </p>
-
-          <p className="mt-6 font-bold">
-            — Sarah & Michael
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* ABOUT */}
-
-      <section id="about" className="py-32 bg-white">
-
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center px-6">
-
-          <div>
-
-            <h2 className="text-5xl font-black mb-10">
-              Pse të zgjidhni klinikën tonë?
-            </h2>
-
-            <p className="text-gray-600 leading-relaxed">
-              Lumina Fertility është një nga klinikat më të avancuara të fertilitetit
-              në Evropë, me laborator modern dhe ekip mjekësor me përvojë
-              ndërkombëtare.
-            </p>
+            {/* 6. Pronësia Intelektuale */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={revealVariant} whileHover="animate" className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[48px] hover:border-[#c5a059]/30 transition-all group flex flex-col justify-between min-h-[380px]">
+              <div>
+                <motion.div variants={iconAnimation} className="mb-8 w-fit p-4 rounded-2xl bg-[#c5a059]/5 border border-[#c5a059]/10"><Globe className="w-10 h-10 text-[#c5a059]" /></motion.div>
+                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tighter italic">Pronësia Intelektuale</h3>
+                <p className="text-white/40 leading-relaxed">Mbrojtja e markave, patentave dhe të drejtave të autorit në nivel ndërkombëtar.</p>
+              </div>
+              <Link href="/sherbimet" className="flex items-center gap-2 text-[#c5a059] text-[10px] font-black uppercase tracking-[0.2em] group-hover:gap-4 transition-all mt-8">Më shumë <ChevronRight size={14} /></Link>
+            </motion.div>
 
           </div>
-
-          <img
-            src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000"
-            className="rounded-[40px] shadow-2xl"
-          />
-
         </div>
-
       </section>
 
-      {/* CTA */}
-
-      <section className="py-24 text-center bg-gradient-to-r from-rose-400 to-purple-400 text-white">
-
-        <h2 className="text-4xl font-black mb-6">
-          Filloni udhëtimin tuaj drejt prindërimit
-        </h2>
-
-        <button className="bg-white text-rose-500 px-10 py-5 rounded-2xl font-bold">
-          Rezervo Konsultë
-        </button>
-
-      </section>
-
-      {/* FOOTER */}
-
-      <footer className="py-20 text-center bg-white border-t border-gray-200">
-
-        <p className="text-gray-400 text-sm">
-          © 2026 Lumina Fertility Clinic
-        </p>
-
+      {/* --- FOOTER --- */}
+      <footer className="py-20 border-t border-white/5 text-center opacity-20 text-[10px] uppercase tracking-[0.5em] font-bold">
+        Lex Associates • 2026 • Studio Juridike Elitare
       </footer>
 
-    </div>
+      {/* --- BACK TO TOP --- */}
+      <AnimatePresence>
+        {isScrolled && (
+          <motion.button initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }} onClick={scrollToTop} className="fixed bottom-8 right-8 z-[150] p-4 rounded-full bg-[#c5a059] text-black shadow-2xl hover:bg-white transition-all group">
+            <ChevronUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+    </main>
   );
 }
